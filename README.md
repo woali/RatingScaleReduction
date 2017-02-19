@@ -1,0 +1,3 @@
+# RatingScaleReduction
+
+TBA
