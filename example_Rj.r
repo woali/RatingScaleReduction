@@ -30,6 +30,9 @@ mydata[,i] <-as.numeric(mydata[,i])
 
 att <-mydata[,2:ncol(mydata)]
 d3 <-match("hepato",names(att))
+names(att[,-d3])
+
+diffExamples(att[,-d3], hepato)
 
 a3 <-totalAuc(att[,-d3], hepato, plotT=TRUE)
 a3$summary
