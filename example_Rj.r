@@ -7,7 +7,9 @@ library(RatingScaleReduction)
 ###########################################
 #First Example 
 
-mydata = read.csv(file="http://web.ue.katowice.pl/woali/BDI.csv")
+#mydata = read.csv("BDI.csv")
+#the data set *mydata* contains 21 columns called BDI_1,...,BDI_21 and the las colummn with 0 and 1.
+
 attach(mydata)
 
 attribute = mydata[,1:21]
