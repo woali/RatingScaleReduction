@@ -8,7 +8,7 @@ library(RatingScaleReduction)
 #First Example 
 
 #mydata = read.csv("BDI.csv")
-#the data set *mydata* contains 21 columns called BDI_1,...,BDI_21 and the las colummn with 0 and 1.
+#the data set *mydata* contains 21 columns called BDI_1,...,BDI_21 and the last colummn with 0 and 1.
 
 attach(mydata)
 
