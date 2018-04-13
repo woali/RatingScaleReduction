@@ -1,57 +1,13 @@
 #####code by Alicja Wolny-Dominiak, Feng Li
 #####woali@ue.katowice.pl
+####Date: march 2018
 
 library(RatingScaleReduction)
+library(pROC)
 
 ###########################################
 ###########################################
 #First Example 
-
-#mydata = read.csv("BDI.csv")
-#the data set *mydata* contains 21 columns called BDI_1,...,BDI_21 and the last colummn with 0 and 1.
-
-attach(mydata)
-
-attribute = mydata[,1:21]
-D = mydata[,22]
-tauc.bdi <- totalAuc(attribute, D, plotT = TRUE)
-
-tauc.bdi$summary
-tauc.bdi$item
-
-rsr.bdi <- rsr(attribute, D, plotRSR = TRUE)
-rsr.bdi
-
-##Graded Response Model (GRM)
-library(ltm)
-grm1 <- grm(attribute)
-grm1.rsr <- grm(data.frame(BDI_1,BDI_7,BDI_9,BDI_10,BDI_14,BDI_15))
-
-
-###CFA
-library(lavaan)
-library(semPlot)
-
-model1 <- 'D=~BDI_1+BDI_2+BDI_3+BDI_4+BDI_5+BDI_6+BDI_7+BDI_8+BDI_9+BDI_10+BDI_11+BDI_12+BDI_13+BDI_14+BDI_15+BDI_16+BDI_17+BDI_18+BDI_19+BDI_20+BDI_21'
-cfa1 <- cfa(model1, data=mydata, ordered=c("BDI_1","BDI_2", "BDI_3","BDI_4","BDI_5","BDI_6","BDI_7","BDI_8",
-"BDI_9","BDI_10","BDI_11","BDI_12","BDI_13","BDI_14","BDI_15","BDI_16","BDI_17","BDI_18",
-"BDI_19","BDI_20","BDI_21"))
-summary(cfa1, fit.measure=TRUE,standardize=TRUE)
-
-model1.rsr <- 'D=~BDI_1+BDI_7+BDI_9+BDI_10+BDI_14+BDI_15'
-cfa1.rsr <- cfa(model1.rsr, data=mydata, ordered=c("BDI_1","BDI_7", "BDI_9","BDI_10","BDI_14","BDI_15"))
-summary(cfa1.rsr, fit.measure=TRUE,standardize=TRUE)
-
-#layout(t(1:2))
-semPaths(cfa1, "est", title = FALSE, intercepts = FALSE,  sizeMan=6, edge.label.cex=1.3, edge.color=4,  label.cex=1.5)
-title("BDI depresion full scale", line = 1)
-
-semPaths(cfa1.rsr, "est", title = FALSE, intercepts = FALSE,  sizeMan=9, edge.label.cex=1.7, edge.color=4,  label.cex=1.7)
-title("BDI depresion reduced scale", line = 1)
-
-##########################################
-##########################################
-#Second Example 
 
 ##Data manipulation
 mydata_red = read.csv2(file = "http://web.ue.katowice.pl/woali/winequality-red.csv")
@@ -74,19 +30,17 @@ for (i in 1:ncol(mydata)){
   mydata[,i] <- as.numeric(mydata[,i])
 }
 
-##RSR
 attribute <- mydata[,1:11]
 D <- mydata[,12]
-colnames(attribute) <- c("FA","VA","CA","RS","Ch","FSD","TSD","De","pH","Su","Al")
 
 rauc.wine <- totalAuc(attribute, D, plotT=TRUE)
-
 rauc.wine$summary
 rauc.wine$item
 
-rsr(attribute, D,plotRSR=TRUE)
+colnames(attribute) <- c("FA","VA","CA","RS","Ch","FSD","TSD","De","pH","Su","Al")
+
+##RSR
 diffExamples(attribute)
-startAuc(attribute, D)
 
 rsr.wine <- rsr(attribute, D, plotRSR=TRUE)
 
@@ -95,4 +49,124 @@ rsr.wine$rsr.label
 rsr.wine$summary
 
 
+######################################
+######################################
+#Second Example 
+library(RatingScaleReduction)
+library(pROC)
+library(DEoptim)
+set.seed(1234)
 
+mydata = read.csv2(file="http://web.ue.katowice.pl/woali/SHS_D8.csv")
+
+attribute = mydata[ ,1:6]
+D = mydata[ ,7]
+
+##Testing rating scale 
+
+##classifier - sum of attributes
+D.predict <- rowSums(attribute)
+(aucResult <- roc(D, D.predict, plotROC = FALSE)$auc)
+
+tot <-totalAuc(attribute, D, plotT = TRUE)
+rsrSum <- rsr(attribute, D, plotRSR = TRUE)
+
+
+##classifier - DEvol
+
+## nsi function has a global minimum inconsistency index 
+## Note that the vector of parameters to be optimized must be the first 
+## argument of the objective function passed to DEoptim.
+nsi1<-function(x){
+  
+  D.predict <- rowSums(x*mydata)
+  -1*roc(D, D.predict, plotROC = FALSE)$auc
+}
+
+
+## DEoptim searches for minima of the objective function between
+## lower and upper bounds on each parameter to be optimized. Therefore
+## in the call to DEoptim we specify vectors that comprise the
+## lower and upper bounds; these vectors are the same length as the
+## parameter vector.
+lower_nsi <- c(0.1,0.1, 0.1, 0.1, 0.1,0.1)
+upper_nsi <- c(3,3,3,3,3,3)
+
+output.all <- DEoptim(nsi1, lower_nsi, upper_nsi, DEoptim.control(itermax=10))
+
+#ouput the optimize result
+output.all$optim
+
+#ouput the optimize result of vector
+(weight.item.all <- output.all$optim$bestmem)
+
+#all items
+(aucResult.all <- -1*output.all$optim$bestval)
+
+
+## RSR
+start.auc <-vector(length=ncol(attribute))
+for (i in 1:(ncol(attribute))) {
+  start.auc[i] <- roc(D, attribute[,i], plotROC=FALSE)$auc
+  }
+
+mydata1 <- rbind(start.auc,attribute[,1:(ncol(attribute))])
+s1 <- mydata1[,order(mydata1[1,],  decreasing = TRUE)]
+attMs <- s1[2:nrow(s1),]
+
+#DE
+results <- matrix(nrow = ncol(attMs), ncol = 2)
+results[1, ] <- cbind(1, sort(start.auc)[1])
+weight1 <- NULL
+
+for (i in 2:ncol(attMs)) {
+  mydata <- attMs[ ,1:i]
+  
+  lower_nsi <- rep(0.1,i)
+  upper_nsi <- rep(3,i)
+  
+  output <- DEoptim(nsi1, lower_nsi, upper_nsi, DEoptim.control(itermax=10))
+  results[i, ] <- cbind(i, -1*output$optim$bestval)
+  weight <- output$optim$bestmem
+  weight1 <- list(weight1, w = weight)
+  
+}
+colnames(results) <- c("number of items", 'AUCtotalDE')
+results
+names(attMs)
+
+#Fig.
+plot(results[ , 2], xaxt="n", type='l', ylab="AUC of item subset", xlab="Attribute number or identification", lwd=2)
+points(which.max(results[ , 2]),max(results[-1, 2]), 
+       col='orange', lwd=2)
+abline(v=which.max(results[ , 2]), col='green', lty=2, lwd=2)
+labele = c(names(attMs))
+mtext(labele,at=1:ncol(attMs),side=1)
+
+
+#Fig. 
+w.opt <- weight1[[1]]$w
+mydata <- attMs[ ,1:5]
+nsi1(w.opt)
+D.predictDE <- rowSums(w.opt*attMs[ ,1:5])
+D.predictSum <-  rowSums(attMs[ ,1:5])
+
+(p <-roc(D, D.predictDE, plotROC = FALSE))
+x=1-p$specificities
+y=p$sensitivities
+
+p1 <-roc(D, D.predictSum)
+x1=1-p1$specificities
+y1=p1$sensitivities
+  
+plot(x1, y1, type = 'l', xlab="1-specificities", 
+     ylab = 'sensitivities')
+lines(x, y, col = 'red')
+
+#polygon(x, y, col = 'green')
+#polygon(x1, y1, col = 'red')
+
+abline(0, 1) 
+legend("bottomright", legend = list("Classifier - SUm", "Classifier - DE"), col = 1:2, lty = 1)
+
+#save.image('examples.RData')
