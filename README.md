@@ -2,7 +2,7 @@
 update: 17/04/2018
 
 The repository contains the package "RatingScaleReduction" and the R code used in the paper "RatingScaleReduction package: stepwise
-rating scale item reduction without predictability loss" by Waldemar W. Koczkodaj, Feng Li and Alicja Wolny–Dominiak.
+rating scale item reduction without predictability loss" by Waldemar W. Koczkodaj, Feng Li and [Alicja Wolny–Dominiak](https://woali.github.io/rphdstatistics/).
 
 The [wine quality data set](https://archive.ics.uci.edu/ml/datasets/Wine+Quality) used in example 1 (example_Rf.R) comes from:
 
