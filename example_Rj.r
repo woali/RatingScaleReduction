@@ -1,6 +1,6 @@
 #####code by Alicja Wolny-Dominiak, Feng Li
 #####woali@ue.katowice.pl
-####Date: march 2018
+####Date: may 2018
 
 library(RatingScaleReduction)
 library(pROC)
@@ -10,34 +10,15 @@ library(pROC)
 #First Example 
 
 ##Data manipulation
-mydata_red = read.csv2(file = "http://web.ue.katowice.pl/woali/winequality-red.csv")
-mydata_white = read.csv2(file = "http://web.ue.katowice.pl/woali/winequality-white.csv")
-
-mydata = rbind(mydata_red,mydata_white)
-mydata$decision = 0
-
-for (i in 1:nrow(mydata))
-{
-  if (mydata$quality[i] > 5)
-    mydata$decision[i] = 1
-}
-
-mydata = mydata[,-12]
-
-attach(mydata)
-
-for (i in 1:ncol(mydata)){
-  mydata[,i] <- as.numeric(mydata[,i])
-}
+mydata <- wineData
 
 attribute <- mydata[,1:11]
 D <- mydata[,12]
 
-rauc.wine <- totalAuc(attribute, D, plotT=TRUE)
-rauc.wine$summary
-rauc.wine$item
+tauc.wine <- totalAuc(attribute, D, plotT=FALSE)
+tauc.wine$summary
+tauc.wine$item
 
-colnames(attribute) <- c("FA","VA","CA","RS","Ch","FSD","TSD","De","pH","Su","Al")
 
 ##RSR
 diffExamples(attribute)
@@ -48,6 +29,10 @@ rsr.wine$rsr.auc
 rsr.wine$rsr.label
 rsr.wine$summary
 
+##Figure 2
+colnames(attribute) <- c("FA","VA","CA","RS","Ch","FSD","TSD","De","pH","Su","Al")
+tauc.wine <- totalAuc(attribute, D, plotT=TRUE)
+
 
 ######################################
 ######################################
@@ -57,10 +42,8 @@ library(pROC)
 library(DEoptim)
 set.seed(1234)
 
-mydata = read.csv2(file="http://web.ue.katowice.pl/woali/SHS_D8.csv")
-
-attribute = mydata[ ,1:6]
-D = mydata[ ,7]
+attribute <- SHSData[ ,1:6]
+D <- SHSData[ ,7]
 
 ##Testing rating scale 
 
@@ -79,7 +62,7 @@ rsrSum <- rsr(attribute, D, plotRSR = TRUE)
 ## argument of the objective function passed to DEoptim.
 nsi1<-function(x){
   
-  D.predict <- rowSums(x*mydata)
+  D.predict <- rowSums(x*attribute)
   -1*roc(D, D.predict, plotROC = FALSE)$auc
 }
 
@@ -94,10 +77,10 @@ upper_nsi <- c(3,3,3,3,3,3)
 
 output.all <- DEoptim(nsi1, lower_nsi, upper_nsi, DEoptim.control(itermax=10))
 
-#ouput the optimize result
+#output the optimize result
 output.all$optim
 
-#ouput the optimize result of vector
+#output the optimize result of vector
 (weight.item.all <- output.all$optim$bestmem)
 
 #all items
@@ -169,4 +152,4 @@ lines(x, y, col = 'red')
 abline(0, 1) 
 legend("bottomright", legend = list("Classifier - SUm", "Classifier - DE"), col = 1:2, lty = 1)
 
-#save.image('examples.RData')
+save.image('examples.RData')
