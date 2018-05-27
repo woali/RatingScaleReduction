@@ -1,8 +1,8 @@
 ## RatingScaleReduction
 update: 27/05/2018
 
-The repository contains the package "RatingScaleReduction" and the R code used in the paper "RatingScaleReduction package: stepwise
-rating scale item reduction without predictability loss" by Waldemar W. Koczkodaj, Feng Li and [Alicja Wolny–Dominiak](https://woali.github.io/rphdstatistics/).
+The repository contains the package "RatingScaleReduction" and the R code used in the paper **"RatingScaleReduction package: stepwise
+rating scale item reduction without predictability loss"** by Waldemar W. Koczkodaj, Feng Li and [Alicja Wolny–Dominiak](https://woali.github.io/rphdstatistics/).
 
 1. Data set - example 1
 
