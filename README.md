@@ -8,6 +8,7 @@ rating scale item reduction without predictability loss" by Waldemar W. Koczkoda
 
 'wineData' in RatingScaleRediction package
 The [wine quality data set](https://archive.ics.uci.edu/ml/datasets/Wine+Quality) used in example 1 (example_Rf.R) comes from:
+https://archive.ics.uci.edu/ml/datasets/Wine+Quality
 
 2. Data set - example 2\
 'SHSData'
