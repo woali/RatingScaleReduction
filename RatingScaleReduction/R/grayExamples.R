@@ -1,19 +1,5 @@
-###############################################################################################
-# Function description
-#   Examples belonging to both classes
-#   A subset of data with examples having identical values for all attributes and value 0 or 1
-#   (for the class attribute also called the decision attribute)
-# 
-#
-# Parameters
-#   attribute: a matrix or data.frame containing attributes
-#   D: the decision vector
-#
-# Return 
-#   1: a list of pairs of identical examples on all atributes
-###############################################################################################
-
-grayExamples <- function(attribute, D) {
+grayExamples <-
+function(attribute, D) {
     df1 <- data.frame(D, attribute)
     
     # compare each values of attributes in every examples 
@@ -42,4 +28,3 @@ grayExamples <- function(attribute, D) {
     }
     return("end of set")
 }
-

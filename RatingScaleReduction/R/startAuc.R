@@ -1,19 +1,5 @@
-###############################################################################################
-# Function description
-#   AUC of a single attribute
-#   Compute AUC of every single attribute
-#
-# Parameters
-#   attribute: a matrix or data.frame containing attributes
-#   D: the decision vector
-#
-# Return the list of
-#   auc: AUC of a single attribute
-#   item: attribute labels
-#   summary: a summary table
-###############################################################################################
-
-startAuc <- function(attribute, D) {
+startAuc <-
+function(attribute, D) {
     
     # attribute - the matix of attributes, every attribute must have headers D - the decision vector
     # testing for null length 
@@ -41,4 +27,3 @@ startAuc <- function(attribute, D) {
     class(outlist) = "startAuc"
     return(outlist)
 }
-

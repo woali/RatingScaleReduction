@@ -1,23 +1,5 @@
-###############################################################################################
-# Function description
-#   AUC of the running total of attributes
-#   AUC values are computed for all individual attributes. We sort them in an ascending order. We
-#   beging with the attribute having the largest AUC and add to it the second, third,... attribute until
-#   AUC of the total of them decreases.
-#
-# Parameters
-#   attribute: a matrix or data.frame containing attributes
-#   D: the decision vector
-#   plotT: If TRUE the plot is created: x - labels of atrributes, y - total AUC in ascending order
-#
-# Return the list of
-#   ordered.attribute:ordered attribute matrix
-#   total.auc: total AUC
-#   item: ordered attribute labels
-#   summary: a summary table
-###############################################################################################
-
-totalAuc <- function(attribute, D, plotT = FALSE) {
+totalAuc <-
+function(attribute, D, plotT = FALSE) {
      # testing for null length of names of attribute
     if (length(names(attribute)) == 0) {
         outlist = list(message("names(attribute)==NULL Create attribute LABELS (e.g. using colnames)"))
@@ -75,4 +57,3 @@ totalAuc <- function(attribute, D, plotT = FALSE) {
     class(outlist) = "totalAuc"
     return(outlist)
 }
-
