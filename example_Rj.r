@@ -1,6 +1,8 @@
 #####code by Alicja Wolny-Dominiak, Feng Li
 #####woali@ue.katowice.pl
 ####Date: may 2018
+####package version: 1.2.2
+
 
 library(RatingScaleReduction)
 library(pROC)
