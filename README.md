@@ -15,5 +15,5 @@ https://archive.ics.uci.edu/ml/datasets/Wine+Quality
 * P. Cortez, A. Cerdeira, F. Almeida, T. Matos and J. Reis. 
 Modeling wine preferences by data mining from physicochemical properties. In Decision Support Systems, Elsevier, 47(4):547-553, 2009.
 
-The Somerville Happiness Survey responses used in second example comes from https://catalog.data.gov/dataset/somerville-happiness-survey-responses-2011-2013-2015.
+The Somerville Happiness Survey responses used in second example comes from *somerville-happiness-survey-responses-2015*.
 
