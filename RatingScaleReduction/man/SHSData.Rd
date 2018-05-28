@@ -22,7 +22,8 @@ services every second year since 2011. Every year, the survey is refined. This d
   }
 }
 \references{
-\url{https://catalog.data.gov/dataset/somerville-happinesssurvey-responses-2011-2013-2015}\cr}
+Somerville-happinesssurvey-responses-2011-2013-2015}
+
 \examples{
 data(SHSData)
 ## maybe str(SHSData) ; plot(SHSData) ...
